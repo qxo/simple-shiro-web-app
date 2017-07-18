@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans  
+    xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+    xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:tx="http://www.springframework.org/schema/tx"  
+    xmlns:jdbc="http://www.springframework.org/schema/jdbc"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans   
+    http://www.springframework.org/schema/beans/spring-beans.xsd  
+    http://www.springframework.org/schema/aop   
+    http://www.springframework.org/schema/aop/spring-aop.xsd  
+    http://www.springframework.org/schema/context  
+    http://www.springframework.org/schema/context/spring-context.xsd  
+    http://www.springframework.org/schema/jdbc  
+    http://www.springframework.org/schema/jdbc/spring-jdbc.xsd  
+    http://www.springframework.org/schema/tx  
+    http://www.springframework.org/schema/tx/spring-tx.xsd">  
+    <!-- derby创建用户名和密码参考：http://www.joyzhong.com/archives/643 -->  
+    <!-- 使用内存数据库时，该段配置不再需要   -->  
+    
+    <bean id="propertyConfigurerGolbal"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+          <property name="locations">
+               <list><value>classpath:AppConf.properties</value>
+                    <value>classpath:/GlobalConf.properties</value></list>
+          </property>
+          <property name="ignoreResourceNotFound" value="true"></property>
+     </bean>   
+    
+    <bean    id="dataSource"   class="org.springframework.jdbc.datasource.DriverManagerDataSource">  
+        <property name="driverClassName">  
+            <value>${jdbc.driver}</value>  
+        </property>  
+        <property name="url">  
+            <value>${jdbc.url}</value>  
+        </property>  
+        <property name="username">  
+            <value>${jdbc.user}</value>  
+        </property>  
+        <property name="password">  
+            <value>${jdbc.pwd}</value>  
+        </property>  
+    </bean>  
+    
+  	<jdbc:initialize-database data-source="dataSource" enabled="true"  ignore-failures="NONE" >
+		<jdbc:script location="classpath:/initsqls/*.sql" separator=";" execution="INIT"/>
+	</jdbc:initialize-database>
+    
+     <!-- 使用内存数据库 
+    <jdbc:embedded-database id="dataSource" type="DERBY">  
+        <jdbc:script location="classpath:schema.sql"/>  
+        <jdbc:script location="classpath:test-data.sql"/>  
+    </jdbc:embedded-database>  
+      -->  
+
+    <!-- 使用annotation的方式配置Spring Bean
+    <context:component-scan base-package="zwh.spring.security"></context:component-scan>  
+     -->  
+     
+	<bean id="myBean" class="sample.SpringObjectFactory" factory-method="createFactory">
+	  
+	</bean>
+		<!-- 
+	 <bean id="sessionDAO" class="sample.SessionRedisDao">
+	</bean>
+	
+	-->
+	
+
+     <bean id="sessionDAO" class="sample.SharedSessionDAO">
+		<!-- <property name="sharedContextPath" value="${sharedContextPath:}"></property>	 -->
+	</bean>
+	
+	 
+	
+</beans>  

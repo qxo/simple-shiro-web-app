@@ -88,6 +88,8 @@ table.sample td {
 			</tr>
 		</table>
 	</form>
-
+<h3>
+session names: <%= java.util.Collections.list(session.getAttributeNames()) %>
+</h3>
 </body>
 </html>

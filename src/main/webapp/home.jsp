@@ -29,6 +29,7 @@
 		<p>
 			Visit your <a href="<c:url value="/account"/>">account page</a>.
 		</p>
+	
 	</shiro:user>
 	<shiro:guest>
 		<p>
@@ -37,7 +38,12 @@
 			log-in first.
 		</p>
 	</shiro:guest>
-
+	session names: <%java.util.List<String> list = java.util.Collections.list(session.getAttributeNames());
+		for(String n: list){ %>
+			<%=n%>:<%= session.getAttribute(n) %> <br/>
+			<%
+		}
+	%>
 	<h2>Roles</h2>
 
 	<p>To show some taglibs, here are the roles you have and don't
